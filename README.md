@@ -37,6 +37,55 @@ A site-selection analysis for public EV charging stations (*SPKLU, Stasiun Pengi
 
 ## Results
 
+### 1. Coverage gap: where public chargers are missing
+
+In 8 of 30 districts, less than 25% of the area is within 1 km of a public charger. They form a belt across the south-west, south and east of the city. The centre (Bandung Wetan, Sumur Bandung, Lengkong) is almost fully covered.
+
+![Share of each district within 1 km of a public charger (red = under 25%)](figures/01_geomapid_coverage_by_district.png)
+
+### 2. Suitability: GEO MAPID Site Selection
+
+The city was split into 312 hexagon cells, each scored 0–100 with this formula (run on 27 October 2026):
+
+![Site Selection formula panel](figures/03_geomapid_formula_panel.png)
+
+Only 14 of 312 cells (4.5%) are *suitable* or *highly suitable*:
+
+| Class | Cells |
+| --- | --- |
+| Highly suitable (Sangat Sesuai) | 3 |
+| Suitable (Sesuai) | 11 |
+| Moderately suitable (Cukup Sesuai) | 44 |
+| Not suitable (Tidak Sesuai) | 93 |
+| Highly unsuitable (Sangat Tidak Sesuai) | 161 |
+
+![All grid cells by suitability class](result_selection/01_site_selection_grid_all_classes.png)
+
+Zoomed in on the 14 suitable cells (numbers are the top-10 ranks; the three unnumbered cells in the north are ranks 11–14):
+
+![Suitable and highly suitable cells](result_selection/02_site_selection_suitable_cells_zoom.png)
+
+| Rank | Score | Class | Area (from map labels) | Density (people/km²) | Total POI | Retail & trade POI |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | 100.0 | Highly suitable | City centre (Alun-alun) | 15,053 | 657 | 562 |
+| 2 | 91.9 | Highly suitable | Ciroyom – Cibadak | 68,753 | 329 | 265 |
+| 3 | 91.2 | Highly suitable | Kebon Jeruk | 14,127 | 244 | 117 |
+| **4** | **78.8** | Suitable | **Jamika (Jl. Peta / Jl. Pasirkoja), Bojongloa Kaler** | **68,753** | **211** | **172** |
+| 5 | 74.7 | Suitable | Panjunan | 45,712 | 358 | 307 |
+| 6 | 74.0 | Suitable | Ciroyom – Dungus Cariang | 55,113 | 204 | 176 |
+| 7 | 73.0 | Suitable | Balong Gede | 15,053 | 215 | 109 |
+| 8 | 70.6 | Suitable | Citarum | 1,769 | 308 | 169 |
+| **9** | **70.4** | Suitable | **Suka Asih, Bojongloa Kaler** | **45,712** | **197** | **148** |
+| 10 | 67.3 | Suitable | East of the centre (Merdeka – Kebonwaru) | 21,266 | 276 | 198 |
+
+Density here is GEO MAPID's grid-level value, which can differ from the district averages published by BPS.
+
+### 3. Gap filter: combining suitability with existing chargers
+
+7 of the top 10 cells are in the city centre, which already has the most chargers. A suitability model alone would put new chargers where they are least needed. Overlaying existing chargers on the grid leaves cells 4 and 9 in Jamika – Suka Asih (Bojongloa Kaler) as the best high-scoring area with no public charger nearby (white dots on the map at the top of this page are existing chargers).
+
+### 4. Candidate comparison
+
 | District | Population | Density (people/km²) | Public chargers | Area within 1 km of a public charger | GEO MAPID grid |
 | --- | --- | --- | --- | --- | --- |
 | **Bojongloa Kaler** | 126,385 | 41,711 | 0 | 9.4% | Green, cells ranked 4 and 9 |
@@ -44,15 +93,7 @@ A site-selection analysis for public EV charging stations (*SPKLU, Stasiun Pengi
 | Antapani | 82,350 | 21,728 | 0 | 4.8% | Yellow–orange |
 | Cibiru | 79,452 | 12,572 | 1 | 21.0% | Orange–red |
 
-- Only 14 of 312 grid cells (4.5%) are *suitable* or *highly suitable*.
-- 7 of the top 10 cells are in the city centre, which already has the most chargers. A suitability model alone would put new chargers where they are least needed; the gap filter is what moves the answer.
-- Cell rank 4 (score 78.8/100) around Jamika – Suka Asih has the highest density in the grid (68,753 people/km²) and 211 POIs, with no public charger nearby.
-
-| Share of each district within 1 km of a public charger (red = under 25%) | Site Selection formula |
-| --- | --- |
-| ![Coverage by district](figures/01_geomapid_coverage_by_district.png) | ![Formula panel](figures/03_geomapid_formula_panel.png) |
-
-Full Site Selection results, with the top 10 cells and their scores, are in [`result_selection/`](result_selection/README.md).
+**Bojongloa Kaler is recommended first**: the densest district in the city, no public charger, and the only area outside the centre in the top 10 suitability cells. **Kiaracondong is second**: more residents and no public charger, but only a moderate suitability score.
 
 An interactive map of chargers and coverage is in [`docs/index.html`](docs/index.html) (publish it with GitHub Pages from the `docs/` folder).
 
@@ -81,7 +122,7 @@ data/raw/          input data (see table above)
 data/processed/    Bandung chargers + districts with coverage and population (CSV, GeoJSON)
 outputs/           summary_by_district.csv, candidate_comparison.csv, geomapid_grid_classes.csv
 figures/           GEO MAPID maps and screenshots
-result_selection/  GEO MAPID Site Selection maps and top-cell table
+result_selection/  GEO MAPID Site Selection maps (all cells, suitable cells zoomed)
 docs/index.html    interactive map
 scripts/analysis.py
 ```
